@@ -28,10 +28,14 @@ inset_padding = 0.55;              // Size of the inset bevel
 hook_offset = 5.5;                 // Distance of notches from edges
 inset_corner_depth = 0.3;          // The inset depth of the corners of the tile
 
-// Logo parameters
-dot_rad = 2.6;
-dot_height = 0.8;  // Height of dots (thicker than layer height for reliable printing)
-logo_size = dot_rad * 8;
+// logo parameters - derived from tile size
+// tile is 7 dot-units wide: (1.5 dot outer margins; 3 dots; 2 inner margins of 0.5 dot)
+dot_unit = tile_size / 7;           // dot-unit (diameter of a dot)
+dot_rad = dot_unit / 2;             // dot radius
+dot_height = 0.8;                   // height of dots (thicker than layer height for reliable printing)
+outer_margin = 1.5 * dot_unit;      // margin from tile edge to outer dot edge
+inner_margin = 0.5 * dot_unit;      // gap between adjacent dot edges
+dot_spacing = dot_unit + inner_margin;  // center-to-center spacing (1.5 dot units)
 
 // multi-color export
 module colorpart(n) {
@@ -148,8 +152,9 @@ module framework_tile() {
 
 // individual dot - creates a cylinder flush with the surface
 module dot(x, y) {
-    dr = dot_rad;
-    translate([dr + x*dr*3, dr + y*dr*3, 0])
+    // first dot center is at: outer_margin + dot_rad = 2.0 dot_units from edge
+    first_dot_center = outer_margin + dot_rad;
+    translate([first_dot_center + x * dot_spacing, first_dot_center + y * dot_spacing, 0])
         cylinder(h=dot_height, r=dot_rad, center=false);
 }
 
@@ -185,19 +190,18 @@ module all_dots() {
 
 // tile with Tailscale logo
 module tailscale_tile() {
-    // center the logo on the tile
-    logo_offset = (tile_size - logo_size) / 2;
     half_tile = tile_size / 2;
 
     // create recesses for the dot matrix
+    // dots are positioned relative to tile corner, so offset by -half_tile
     difference() {
         framework_tile();
-        translate([-half_tile + logo_offset, -half_tile + logo_offset, 0])
+        translate([-half_tile, -half_tile, 0])
             all_dots();
     }
 
     // populate the gray & white dots
-    translate([-half_tile + logo_offset, -half_tile + logo_offset, 0]) {
+    translate([-half_tile, -half_tile, 0]) {
         gray_dots();
         accent_dots();
     }
