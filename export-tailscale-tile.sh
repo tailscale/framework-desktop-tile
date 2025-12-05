@@ -12,8 +12,8 @@ OUTPUT_DIR="export"
 OPENSCAD="openscad"
 
 # Color definitions
-declare -a COLORS=("black" "gray" "white")
-declare -a COLOR_NAMES=("0-black" "1-gray" "2-white")
+declare -a COLORS=("white" "gray" "black")
+declare -a COLOR_NAMES=("0-white" "1-gray" "2-black")
 
 # check OpenSCAD is installed
 if ! command -v $OPENSCAD &> /dev/null; then
@@ -68,8 +68,8 @@ echo ""
 echo "Next steps:"
 echo "1. Import all STL files into Bambu Studio / Orca Slicer"
 echo "2. In Objects panel, assign each part to correct filament slot:"
-echo "   - ${OUTPUT_PREFIX}-0-black.stl → Black base filament"
+echo "   - ${OUTPUT_PREFIX}-0-white.stl → White base filament"
 echo "   - ${OUTPUT_PREFIX}-1-gray.stl  → Gray dots filament"
-echo "   - ${OUTPUT_PREFIX}-2-white.stl → White T-shape filament"
+echo "   - ${OUTPUT_PREFIX}-2-black.stl → Black T-shape filament"
 echo "3. Slice and print!"
 echo ""

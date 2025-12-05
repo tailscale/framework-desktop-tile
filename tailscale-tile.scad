@@ -4,9 +4,9 @@
 // Framework Desktop Tile with Tailscale Logo
 //
 // Color scheme:
-// - Color 0 (black): tile base
+// - Color 0 (white): tile base
 // - Color 1 (gray): corner dots + top center dot
-// - Color 2 (white): T-shaped dots (entire middle row + center bottom dot)
+// - Color 2 (black): T-shaped dots (entire middle row + center bottom dot)
 //
 // Export:
 // 1. Run ./export-tailscale-tile.sh to generate all STL files
@@ -15,7 +15,7 @@
 // Adapted from https://www.printables.com/model/1397765-framework-desktop-tile-generator CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
 
 // Multi-color export control
-// Colors: 0 = black (base), 1 = gray (corner dots), 2 = white (T-shape)
+// Colors: 0 = white (base), 1 = gray (corner dots), 2 = black (T-shape)
 current_color = -1;  // -1 = show all (preview), 0/1/2 = export single color
 
 // Tile dimensions
@@ -49,7 +49,7 @@ module tile_base() {
     inset_size = tile_size - inset_padding;
     half_tile = tile_size / 2;
 
-    colorpart(0) color("black") difference() {
+    colorpart(0) color("white") difference() {
         union() {
             translate([inset_padding / 2, inset_padding / 2, 0])
                 cube([inset_size, inset_size, tile_thickness], center = true);
@@ -105,7 +105,7 @@ module add_hooks() {
     half_tile = tile_size / 2;
     vertical_offset = -tile_thickness / 2 + inset_corner_depth;
 
-    colorpart(0) color("black") {
+    colorpart(0) color("white") {
         hook_with_clip([half_tile - hook_offset, half_tile - hook_offset, vertical_offset], -45);      // top-right
         hook_with_clip([-half_tile + hook_offset, half_tile - hook_offset, vertical_offset], 45);      // top-left
         hook_with_clip([half_tile - hook_offset, -half_tile + hook_offset, vertical_offset], -135);    // bottom-right
@@ -132,7 +132,7 @@ module constraint(position) {
 module add_constraints() {
     half_tile = tile_size / 2;
 
-    colorpart(0) color("black") {
+    colorpart(0) color("white") {
         // Left edge
         rotate([0, 0, 90])
             constraint([0, half_tile - inset_padding * 2, -tile_thickness / 2]);
@@ -170,10 +170,10 @@ module gray_dots() {
         }
 }
 
-// white dots: T-shaped pattern
+// black dots: T-shaped pattern
 module accent_dots() {
     colorpart(2) translate([0, 0, tile_thickness/2 - dot_height])
-        color("white") {
+        color("black") {
             dot(0, 1);  // left middle
             dot(1, 1);  // center middle
             dot(2, 1);  // right middle
@@ -200,7 +200,7 @@ module tailscale_tile() {
             all_dots();
     }
 
-    // populate the gray & white dots
+    // populate the gray & black dots
     translate([-half_tile, -half_tile, 0]) {
         gray_dots();
         accent_dots();
